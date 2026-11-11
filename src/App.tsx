@@ -1,16 +1,13 @@
 import "./App.css";
-import { products } from "./Data/data";
-import ItemsContainer from "./Components/ItemsContainer";
+import ThriftHappens from "./Components/ThriftHappens";
+import logo from "./assets/images/logo.png";
 
 function App() {
   return (
-    <>
-      <div>
-        <h1>Thift Happens</h1>
-        <h2>Available Products</h2>
-        <ItemsContainer products={products} />
-      </div>
-    </>
+    <div>
+      <img src={logo} height={150} alt="Thift Happens"></img>
+      <ThriftHappens />
+    </div>
   );
 }
 

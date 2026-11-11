@@ -195,3 +195,13 @@
   justify-content: center;
   margin-bottom: 10px;
 }
+
+.thriftHappens {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.checkoutContainer {
+  min-width: 250px;
+}

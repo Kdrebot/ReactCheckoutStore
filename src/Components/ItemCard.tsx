@@ -3,22 +3,35 @@ import type { ClothingProduct } from "../Data/data";
 
 interface ItemCardProps {
   product: ClothingProduct;
+  onAddToCheckout: (id: number, amount: number) => void;
 }
 
-export default function ItemCard({ product }: ItemCardProps) {
+export default function ItemCard({ product, onAddToCheckout }: ItemCardProps) {
   const [selectedQuantity, setSelectedQuantity] = useState<number>(0);
 
   //handlers
+
+  //add one to the selected quantity cant go above the max stock price
   function handleIncreaseQuantity() {
     setSelectedQuantity((previous) => Math.min(product.quantity, previous + 1));
   }
 
+  //remove 1 from the selected quantity cant go below 0
   function handleDecreaseQuantity() {
     setSelectedQuantity((previous) => Math.max(0, previous - 1));
   }
-
+  //checks to see if the stock is 0 and if it is return true
   function handleOutOfStock(): boolean {
     return product.quantity === 0;
+  }
+
+  function handleAddClick() {
+    if (selectedQuantity <= 0 || selectedQuantity > product.quantity) {
+      return;
+    }
+
+    onAddToCheckout(product.id, selectedQuantity);
+    setSelectedQuantity(0);
   }
 
   //main return
@@ -42,6 +55,16 @@ export default function ItemCard({ product }: ItemCardProps) {
         <span>{selectedQuantity}</span>
         <button onClick={handleIncreaseQuantity} disabled={handleOutOfStock()}>
           +
+        </button>
+        <button
+          onClick={handleAddClick}
+          disabled={
+            selectedQuantity === 0 ||
+            selectedQuantity > product.quantity ||
+            product.quantity === 0
+          }
+        >
+          Add to Checkout
         </button>
       </div>
     </div>
