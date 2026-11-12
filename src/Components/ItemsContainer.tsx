@@ -1,14 +1,12 @@
 import ItemCard from "./ItemCard";
-import type { ClothingProduct } from "../Data/data";
-
-interface ItemsContainerProps {
-  products: ClothingProduct[];
-  onAddToCheckout: (id: number, amount: number) => void;
-}
+import type { ItemsContainerProps } from "./ThriftHappens";
 
 export default function ItemsContainer({
   products,
-  onAddToCheckout,
+  selectedQuantities,
+  handleIncreaseQuantity,
+  handleDecreaseQuantity,
+  handleAddToCheckout,
 }: ItemsContainerProps) {
   return (
     <div className="ItemsContainer">
@@ -16,7 +14,11 @@ export default function ItemsContainer({
         <ItemCard
           key={product.id}
           product={product}
-          onAddToCheckout={onAddToCheckout}
+          selectedQuantity={selectedQuantities[product.id]}
+          isOutOfStock={product.quantity === 0}
+          handleIncreaseQuantity={handleIncreaseQuantity}
+          handleDecreaseQuantity={handleDecreaseQuantity}
+          handleAddToCheckout={handleAddToCheckout}
         />
       ))}
     </div>

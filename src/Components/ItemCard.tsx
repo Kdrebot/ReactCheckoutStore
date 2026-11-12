@@ -1,43 +1,17 @@
-import { useState } from "react";
-import type { ClothingProduct } from "../Data/data";
+import type { ItemCardProps } from "./ThriftHappens";
 
-interface ItemCardProps {
-  product: ClothingProduct;
-  onAddToCheckout: (id: number, amount: number) => void;
-}
-
-export default function ItemCard({ product, onAddToCheckout }: ItemCardProps) {
-  const [selectedQuantity, setSelectedQuantity] = useState<number>(0);
-
-  //handlers
-
-  //add one to the selected quantity cant go above the max stock price
-  function handleIncreaseQuantity() {
-    setSelectedQuantity((previous) => Math.min(product.quantity, previous + 1));
-  }
-
-  //remove 1 from the selected quantity cant go below 0
-  function handleDecreaseQuantity() {
-    setSelectedQuantity((previous) => Math.max(0, previous - 1));
-  }
-  //checks to see if the stock is 0 and if it is return true
-  function handleOutOfStock(): boolean {
-    return product.quantity === 0;
-  }
-
-  function handleAddClick() {
-    if (selectedQuantity <= 0 || selectedQuantity > product.quantity) {
-      return;
-    }
-
-    onAddToCheckout(product.id, selectedQuantity);
-    setSelectedQuantity(0);
-  }
-
-  //main return
+export default function ItemCard({
+  product,
+  selectedQuantity,
+  isOutOfStock,
+  handleIncreaseQuantity,
+  handleDecreaseQuantity,
+  handleAddToCheckout,
+}: ItemCardProps) {
   return (
     <div className="itemCard">
-      <img src={product.image} alt="" height="150px" />
+      <img src={product.image} alt={product.name} width={150} />
+
       <h3>{product.name}</h3>
       <p>Fit: {product.fit}</p>
       <p>Category: {product.category}</p>
@@ -45,28 +19,37 @@ export default function ItemCard({ product, onAddToCheckout }: ItemCardProps) {
       <p>Description: {product.description}</p>
       <p>Size: {product.size}</p>
       <p>Price: ${product.price.toFixed(2)}</p>
-      <p>
-        {handleOutOfStock() ? "Out Of Stock" : `Stock: ${product.quantity}`}
-      </p>
+
+      <p>{isOutOfStock ? "Out of Stock" : `Stock: ${product.quantity}`}</p>
+
       <div className="quantityCounter">
-        <button onClick={handleDecreaseQuantity} disabled={handleOutOfStock()}>
+        <button
+          onClick={() => handleDecreaseQuantity(product.id)}
+          disabled={selectedQuantity === 0}
+        >
           -
         </button>
+
         <span>{selectedQuantity}</span>
-        <button onClick={handleIncreaseQuantity} disabled={handleOutOfStock()}>
+
+        <button
+          onClick={() => handleIncreaseQuantity(product.id)}
+          disabled={isOutOfStock || selectedQuantity >= product.quantity}
+        >
           +
         </button>
-        <button
-          onClick={handleAddClick}
-          disabled={
-            selectedQuantity === 0 ||
-            selectedQuantity > product.quantity ||
-            product.quantity === 0
-          }
-        >
-          Add to Checkout
-        </button>
       </div>
+
+      <button
+        onClick={() => handleAddToCheckout(product.id)}
+        disabled={
+          isOutOfStock ||
+          selectedQuantity === 0 ||
+          selectedQuantity > product.quantity
+        }
+      >
+        Add to Checkout
+      </button>
     </div>
   );
 }

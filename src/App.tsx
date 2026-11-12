@@ -5,7 +5,10 @@ import logo from "./assets/images/logo.png";
 function App() {
   return (
     <div>
-      <img src={logo} height={150} alt="Thift Happens"></img>
+      <h1>Thrift Happens</h1>
+
+      <img src={logo} alt="Thrift Happens Logo" width={150} />
+
       <ThriftHappens />
     </div>
   );
